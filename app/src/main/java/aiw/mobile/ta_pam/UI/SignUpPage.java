@@ -20,7 +20,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import aiw.mobile.ta_pam.Model.User;
 import aiw.mobile.ta_pam.R;
 
 public class SignUpPage extends AppCompatActivity {
@@ -30,6 +33,9 @@ public class SignUpPage extends AppCompatActivity {
     Button btnRegister;
     ImageView iconBack7;
 
+    DatabaseReference databaseReference;
+    DatabaseReference users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +43,18 @@ public class SignUpPage extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        et_fullname = findViewById(R.id.et_fullname);
-        et_email = findViewById(R.id.et_email);
-        et_username = findViewById(R.id.et_username);
+        et_fullname = findViewById(R.id.tvFullName);
+        et_email = findViewById(R.id.tv_Email);
+        et_username = findViewById(R.id.tv_Username);
         et_password = findViewById(R.id.et_password);
         et_verifyPassword = findViewById(R.id.et_verifyPassword);
 
         btnRegister = findViewById(R.id.btnRegister);
         iconBack7 = findViewById(R.id.ivBack7);
+
+        // Mendeklarasikan database refrence
+        databaseReference = FirebaseDatabase.getInstance("https://uap-pam-1-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+        users = this.databaseReference.child("users");;
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +78,7 @@ public class SignUpPage extends AppCompatActivity {
         if (!validateForm()) {
             return;
         }
+
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -75,17 +86,50 @@ public class SignUpPage extends AppCompatActivity {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
+                    String userId = user.getUid();
+                    String fullname = et_fullname.getText().toString();
+                    String username = et_username.getText().toString();
+                    String email = et_email.getText().toString();
+
+                    // Simpan data pengguna ke Firebase Realtime Database
+                    User newUser = new User(userId, fullname, username, email);
+                    users.child(userId).setValue(newUser);
+
                     Intent intent = new Intent(SignUpPage.this, SignInPage.class);
                     startActivity(intent);
                     Toast.makeText(SignUpPage.this, "Berhasil membuat akun", Toast.LENGTH_SHORT).show();
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    Toast.makeText(SignUpPage.this, "Gagal membuat akun" + task.getException().getMessage(),  Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpPage.this, "Gagal membuat akun" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+
+//    public void signUp(String email, String password) {
+//        if (!validateForm()) {
+//            return;
+//        }
+//        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if (task.isSuccessful()) {
+//                    // Sign in success, update UI with the signed-in user's information
+//                    Log.d(TAG, "createUserWithEmail:success");
+//                    FirebaseUser user = mAuth.getCurrentUser();
+//                    Intent intent = new Intent(SignUpPage.this, SignInPage.class);
+//                    startActivity(intent);
+//                    Toast.makeText(SignUpPage.this, "Berhasil membuat akun", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    // If sign in fails, display a message to the user.
+//                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+//                    Toast.makeText(SignUpPage.this, "Gagal membuat akun" + task.getException().getMessage(),  Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
 
     private boolean validateForm() {
         boolean hasil = true;
