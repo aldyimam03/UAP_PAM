@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +46,7 @@ import aiw.mobile.ta_pam.R;
 public class HomePage extends AppCompatActivity {
 
     ImageView ivProfile, ivSetting;
-    TextView seeAll, textViewLocation;
+    TextView seeAll, textViewLocation, tvEmail;
     Button checkWeather, checkLocation, btnAdd;
     private Geocoder geocoder;
     FirebaseAuth mAuth;
@@ -72,6 +73,7 @@ public class HomePage extends AppCompatActivity {
         textViewLocation = findViewById(R.id.tvLocation);
         checkWeather = findViewById(R.id.btnCheckWeather);
         checkLocation = findViewById(R.id.btnCheckLocation);
+        tvEmail = findViewById(R.id.et_Email);
 
         mAuth = FirebaseAuth.getInstance();
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -131,6 +133,15 @@ public class HomePage extends AppCompatActivity {
         Test.setLayoutManager(layoutManager);
 
         getAllData();
+    }
+
+    @Override
+    protected void onStart () {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            tvEmail.setText(currentUser.getEmail());
+        }
     }
 
     private void getAllData(){

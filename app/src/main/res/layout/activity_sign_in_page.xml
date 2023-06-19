@@ -59,18 +59,17 @@
         android:background="@drawable/shape_putih"
         android:ems="10"
         android:fontFamily="@font/montserrat_semibold"
-        android:textColorHint="#7F7F7F"
         android:hint="Email"
         android:inputType="textPersonName"
         android:paddingStart="20dp"
         android:textColor="@color/black"
+        android:textColorHint="#7F7F7F"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tvSignInToYourAccount"
         app:layout_constraintStart_toStartOf="@+id/tvSignInToYourAccount"
         app:layout_constraintTop_toBottomOf="@+id/tvSignInToYourAccount"
-        app:layout_constraintVertical_bias="0.046"
-        />
+        app:layout_constraintVertical_bias="0.046" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -138,6 +137,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnSignIn1" />
 
     <com.google.android.gms.common.SignInButton
+        android:id="@+id/btnGoogle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
