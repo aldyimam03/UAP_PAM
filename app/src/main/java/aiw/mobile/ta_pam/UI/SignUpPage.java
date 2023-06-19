@@ -43,9 +43,9 @@ public class SignUpPage extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        et_fullname = findViewById(R.id.tvFullName);
-        et_email = findViewById(R.id.tv_Email);
-        et_username = findViewById(R.id.tv_Username);
+        et_fullname = findViewById(R.id.et_fullname);
+        et_email = findViewById(R.id.et_email);
+        et_username = findViewById(R.id.et_username);
         et_password = findViewById(R.id.et_password);
         et_verifyPassword = findViewById(R.id.et_verifyPassword);
 
